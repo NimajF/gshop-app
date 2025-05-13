@@ -16,14 +16,13 @@ export default function Navbar() {
   const { cart }: CartContextType = useCartContext();
   console.log("cart", cart);
 
-  // Calculate total number of items in the cart
   const cartNumber = Object.values(cart).reduce(
     (total, item) => total + item.quantity,
     0
   );
 
   return (
-    <header className="w-full bg-white sticky top-0 z-50 border-b border-gray-100">
+    <header className="h-16 w-full bg-white sticky top-0 z-50 border-b border-gray-100">
       <nav className="max-w-7xl mx-auto px-4 sm:px-8 py-4 flex items-center justify-between">
         {/* Logo */}
         <Link
