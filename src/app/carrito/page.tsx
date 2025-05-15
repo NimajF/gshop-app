@@ -61,7 +61,7 @@ export default function CartPage() {
             cartItems.map((item) => (
               <Link
                 key={item._id}
-                href={`/producto/${item.slug}`}
+                href={`/productos/${item.slug}`}
                 className="block"
               >
                 <div

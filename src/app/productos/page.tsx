@@ -14,7 +14,12 @@ export default function CategoryPage() {
   const [products, setProducts] = useState<ProductData[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const { getProductsByCategory, setCategoryProducts } = useProductContext();
+  const {
+    getProductsByCategory,
+    setCategoryProducts,
+    setCategoryData,
+    getCategoryData,
+  } = useProductContext();
 
   useEffect(() => {
     if (!categorySlug) return;
@@ -32,6 +37,10 @@ export default function CategoryPage() {
         const data = await res.json();
         setProducts(data);
         setCategoryProducts(categorySlug, data);
+
+        if (data.length > 0 && typeof data[0].category === "object") {
+          setCategoryData(categorySlug, data[0].category);
+        }
       } catch (err) {
         console.error("Error cargando productos:", err);
       } finally {
@@ -42,16 +51,27 @@ export default function CategoryPage() {
     fetchProducts();
   }, [categorySlug]);
 
-  if (loading)
-    return <p className="text-center mt-10">Cargando productos...</p>;
+  const category = categorySlug ? getCategoryData(categorySlug) : null;
+  const categoryName = category?.name || categorySlug;
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center mt-20">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-lime-500 border-solid"></div>
+        <p className="ml-4 text-lg font-medium text-gray-600">
+          Cargando productos...
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-white to-gray-200">
-      <div className="max-w-7xl mx-auto flex gap-8 px-6 py-20">
+    <div className="min-h-screen bg-[#fdf7f7] mt-10">
+      <div className="bg-white max-w-7xl mx-auto flex gap-8 px-6 py-20">
         <SidebarCategoryFilter />
         <div className="flex-1">
           <h1 className="text-3xl font-bold mb-6 text-gray-800">
-            Nuestros productos
+            {categorySlug ? categoryName : "Todos los productos"}
           </h1>
           <ProductList products={products} />
         </div>
